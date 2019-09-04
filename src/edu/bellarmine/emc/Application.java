@@ -17,18 +17,17 @@ public class Application {
 	 */
 	public static void main(String[] args) {
 		
-		BoardSquare[][] board = {
-				{},
-				{},
-				{},
-				{},
-				{},
-				{},
-				{},
-				{}
-		};
+		//Board chessBoard = new Board();
 		
-		//here
+		//Knight knight = new Knight(chessBoard.boardArray[3][3]);
+		
+		TextWriter recordWriter = new TextWriter("test.txt");
+		
+		for (short i = 1; i <= 10; i++) {
+			
+			recordWriter.writeRecord("This is line " + i);
+			
+		}
 		
 	}// end main
 

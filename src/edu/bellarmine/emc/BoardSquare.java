@@ -63,8 +63,8 @@ public class BoardSquare {
 	 */
 	public void setFile(char f) {
 		
-		if (f != 'a' && f != 'b' && f != 'c' && f != 'd' && f != 'e' && f != 'f' && f != 'g' && f != 'h') {
-			file = 'a';
+		if (f < 'a' || f > 'h') {
+			//file = 'a';
 		}
 		else {
 			file = f;

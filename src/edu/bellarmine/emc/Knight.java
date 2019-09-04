@@ -31,17 +31,41 @@ public class Knight {
 		
 	}// end full-argument constructor
 	
-	/* YOU STILL NEED TO WRITE THIS METHOD */
 	/**
 	 * This method attempts to move the knight to a specified square.
-	 * @param targetSquare - the square you want to move the knight to.
+	 * @param targetSquare - the square we want to move the knight to.
 	 * @return whether the knight successfully moved to the square.
 	 */
 	public boolean move(BoardSquare targetSquare) {
 		
+		if (canMoveTo(targetSquare)) {
+		  
+		  	this.setCurrentSquare(targetSquare);
+			return true;
+			
+		}
 		
-		return true;
+		return false;
+		
 	}// end "move" method
+	
+	/* YOU STILL NEED TO WRITE THIS METHOD */
+	/**
+	 * This method checks to see whether a specified square can be legally moved to by the knight.
+	 * @param candidate - the square we want to move the knight to.
+	 * @return whether "candidate" is a legal move for the knight.
+	 */
+	private boolean canMoveTo(BoardSquare candidate) {
+		
+		if ((Math.abs(candidate.getFile() - currentSquare.getFile()) == 2 && Math.abs(candidate.getRank() - currentSquare.getRank()) == 1) ||
+				(Math.abs(candidate.getFile() - currentSquare.getFile()) == 1 && Math.abs(candidate.getRank() - currentSquare.getRank()) == 2))
+		{
+			return true;
+		}
+		
+		return false;
+		
+	}// end "canMoveTo" method
 	
 	/**
 	 * @return the currentSquare
@@ -59,7 +83,7 @@ public class Knight {
 
 	@Override
 	public String toString() {
-		return "Knight [currentSquare = " + currentSquare + "]";
+		return "Knight [currentSquare = " + currentSquare.toString() + "]";
 	}
 	
 }// end "Knight" class
