@@ -14,6 +14,7 @@ public class BoardSquare {
 	private char file;
 	private short rank;
 	private int knightAccess;
+	private int moveNumber;
 	
 	/**
 	 * Empty-argument constructor - sets the file to 'a', the rank to 1, and the knightAccess to 2.
@@ -23,6 +24,7 @@ public class BoardSquare {
 		this.setFile('a');
 		this.setRank((short)1);
 		this.setKnightAccess(2);
+		this.setMoveNumber(0);
 		
 	}// end empty-argument constructor
 	
@@ -37,6 +39,7 @@ public class BoardSquare {
 		this.setFile(f);
 		this.setRank((short)r);
 		this.setKnightAccess(ka);
+		this.setMoveNumber(0);
 		
 	}// end full-argument constructor
 	
@@ -50,6 +53,20 @@ public class BoardSquare {
 		}
 		
 	}// end "moveKnightTo" method
+	
+	/**
+	 * @return the moveNumber
+	 */
+	public int getMoveNumber() {
+		return moveNumber;
+	}
+
+	/**
+	 * @param moveNumber - the moveNumber to set
+	 */
+	public void setMoveNumber(int moveNum) {
+		moveNumber = moveNum;
+	}
 
 	/**
 	 * @return the file

@@ -44,7 +44,7 @@ public class TextWriter {
 		try {
 			
 			writer = new FileWriter(records, true);
-			writer.append("\n" + nextLine);
+			writer.append(nextLine + "\n");
 			writer.close();
 		
 		}

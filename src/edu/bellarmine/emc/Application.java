@@ -1,7 +1,7 @@
 package edu.bellarmine.emc;
 
 /**
- * This class executes the simulation.
+ * This class contains test code.
  * 
  * @author Ethan Colbert
  * @version 1.0
@@ -28,6 +28,8 @@ public class Application {
 			recordWriter.writeRecord("This is line " + i);
 			
 		}
+		
+		System.out.println(recordWriter.toString());
 		
 	}// end main
 

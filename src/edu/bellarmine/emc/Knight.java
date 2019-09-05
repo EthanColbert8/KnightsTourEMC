@@ -49,7 +49,6 @@ public class Knight {
 		
 	}// end "move" method
 	
-	/* YOU STILL NEED TO WRITE THIS METHOD */
 	/**
 	 * This method checks to see whether a specified square can be legally moved to by the knight.
 	 * @param candidate - the square we want to move the knight to.
