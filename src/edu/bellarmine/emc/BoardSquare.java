@@ -127,7 +127,7 @@ public class BoardSquare {
 	 */
 	@Override
 	public String toString() {
-		return "BoardSquare [file = " + file + ", rank = " + rank + ", knightAccess = " + knightAccess + "]";
+		return "BoardSquare [file = " + file + ", rank = " + rank + ", knightAccess = " + knightAccess + ", moveNumber = " + moveNumber + "]";
 	}
 	
 }// end "BoardSpuare" class

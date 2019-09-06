@@ -13,69 +13,74 @@ import java.util.Random;
 
 public class NoHeuristic {
 	
-	static Random random = new Random();
-	static BoardSquare[] possibilities = new BoardSquare[8];
-	static int[] coordinates = {random.nextInt(8), random.nextInt(8)};
+	private static Random random = new Random();
+	private static TextWriter writer = new TextWriter("NoHeuristicRecord.txt");
 	
-	static Board board = new Board();
-	static Knight knight = new Knight(board.boardArray[coordinates[0]][coordinates[1]]);
+	private static Board board = new Board();
+	private static Knight knight = new Knight();
 	
 	/**
+	 * Execution starts here.
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		
-		BoardSquare initialSquare = knight.getCurrentSquare();
+		BoardSquare candidate, lastSquare, initialSquare;
 		
-		System.out.println(initialSquare.toString());
-		
-		int currentMove = 1;
-		
-		boolean finished = false;
-		
-		while(!(finished)) {
+		for (int i = 1; i <= 10; i++) {
 			
-			BoardSquare lastSquare = knight.getCurrentSquare();
+			knight.setCurrentSquare(board.boardArray[random.nextInt(8)][random.nextInt(8)]);
+			initialSquare = knight.getCurrentSquare();
+			initialSquare.setMoveNumber(64);
 			
-			runCircle();
+			int currentMove = 1;
 			
-			for (int i = 0; i < possibilities.length; i++) {
+			boolean done = false;
+			while (!(done)) {
 				
-				try {
+				lastSquare = knight.getCurrentSquare();
+				
+				int count = 0;
+				boolean moved = false;
+				do {
 					
-					knight.move(possibilities[i]);
+					candidate = selectMove();
 					
+					if (candidate.getMoveNumber() == 0 || candidate.getMoveNumber() == 64) {
+						
+						if (currentMove == 64 || candidate.getMoveNumber() == 0) {
+							knight.move(candidate);
+							moved = true;
+						}
+						
+					}
+					
+					count++;
+					if (count >= 10000) {
+						moved = true;
+					}
+					
+				} while (!(moved));
+				
+				if (lastSquare.getRank() == knight.getCurrentSquare().getRank()) {
+					done = true;
+				}
+				else {
 					knight.getCurrentSquare().setMoveNumber(currentMove);
-					
-					updateCoordinates(i);
-					
-					i = possibilities.length;
-					
-					System.out.println(knight.getCurrentSquare().toString());
-					
-				}
-				catch(NullPointerException e) {
-					
+					currentMove++;
 				}
 				
-			}
+				if (currentMove >= 65) {
+					done = true;
+				}
+				
+			}//
 			
-			if (currentMove == 64 && knight.getCurrentSquare().getRank() != lastSquare.getRank()) {
-				
-				System.out.println("[" + initialSquare.getFile() + initialSquare.getRank() + ", " + (currentMove - 1) + ", " + knight.getCurrentSquare().getFile() + knight.getCurrentSquare().getRank() + "]*");
-				//In reality, we'd print out the info to the file.
-				
-				finished = true;
-			}
-			else if (knight.getCurrentSquare().getRank() == lastSquare.getRank()) {
-				
-				System.out.println("[" + initialSquare.getFile() + initialSquare.getRank() + ", " + (currentMove - 1) + ", " + knight.getCurrentSquare().getFile() + knight.getCurrentSquare().getRank() + "]");
-				//In reality, we'd print out the info to the file.
-				
-				finished = true;
+			if (knight.getCurrentSquare().getMoveNumber() == 64) {
+				writer.writeRecord("[" + initialSquare.getFile() + initialSquare.getRank() + ", " + 64 + ", " + knight.getCurrentSquare().getFile() + knight.getCurrentSquare().getRank() + "]*");
 			}
 			else {
-				currentMove++;
+				writer.writeRecord("[" + initialSquare.getFile() + initialSquare.getRank() + ", " + knight.getCurrentSquare().getMoveNumber() + ", " + knight.getCurrentSquare().getFile() + knight.getCurrentSquare().getRank() + "]");
 			}
 			
 		}
@@ -83,133 +88,57 @@ public class NoHeuristic {
 	}// end main
 	
 	/**
-	 * SUPPORT METHOD - fills the "possibilities" array with all legal knight moves that are possible.
+	 * SUPPORT METHOD - randomly selects a legal move for the knight.
+	 * @return a randomly selected square the knight can legally move to.
 	 */
-	private static void runCircle() {
+	private static BoardSquare selectMove() {
 		
-		BoardSquare test;
+		int[] currentCoordinates = {(8 - knight.getCurrentSquare().getRank()), (knight.getCurrentSquare().getFile() - 97)};
+		int[] newCoordinates = new int[2];
 		
-		try {
-			test = board.boardArray[coordinates[0] - 2][coordinates[1] + 1];
+		boolean legal = false;
+		do {
 			
-			if (test.getMoveNumber() == 0) {
-				possibilities[0] = test;
+			boolean xSelected = false;
+			do {
+				newCoordinates[0] = currentCoordinates[0] + (random.nextInt(5) - 2);
+				
+				if (newCoordinates[0] != currentCoordinates[0]) {
+					xSelected = true;}
+				
+			} while (!(xSelected));
+			
+			boolean posOrNeg = random.nextBoolean();
+			if (Math.abs(newCoordinates[0] - currentCoordinates[0]) == 1) {
+				
+				if (posOrNeg) {
+					newCoordinates[1] = currentCoordinates[1] + 2;
+				}
+				else {
+					newCoordinates[1] = currentCoordinates[1] - 2;
+				}
+				
+			}
+			else {
+				
+				if (posOrNeg) {
+					newCoordinates[1] = currentCoordinates[1] + 1;
+				}
+				else {
+					newCoordinates[1] = currentCoordinates[1] - 1;
+				}
+				
 			}
 			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
-		
-		try {
-			test = board.boardArray[coordinates[0] - 1][coordinates[1] + 2];
-
-			if (test.getMoveNumber() == 0) {
-				possibilities[1] = test;
+			try {
+				return board.boardArray[newCoordinates[0]][newCoordinates[1]];
+				//legal = true;
 			}
+			catch(ArrayIndexOutOfBoundsException e) {}
 			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
+		} while (!(legal));
 		
-		try {
-			test = board.boardArray[coordinates[0] + 1][coordinates[1] + 2];
-			
-			if (test.getMoveNumber() == 0) {
-				possibilities[2] = test;
-			}
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
-		
-		try {
-			test = board.boardArray[coordinates[0] + 2][coordinates[1] + 1];
-			
-			if (test.getMoveNumber() == 0) {
-				possibilities[3] = test;
-			}
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
-		
-		try {
-			test = board.boardArray[coordinates[0] + 2][coordinates[1] - 1];
-			
-			if (test.getMoveNumber() == 0) {
-				possibilities[4] = test;
-			}
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
-		
-		try {
-			test = board.boardArray[coordinates[0] + 1][coordinates[1] - 2];
-			
-			if (test.getMoveNumber() == 0) {
-				possibilities[5] = test;
-			}
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
-		
-		try {
-			test = board.boardArray[coordinates[0] - 1][coordinates[1] - 2];
-			
-			if (test.getMoveNumber() == 0) {
-				possibilities[6] = test;
-			}
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
-		
-		try {
-			test = board.boardArray[coordinates[0] - 2][coordinates[1] - 1];
-			
-			if (test.getMoveNumber() == 0) {
-				possibilities[7] = test;
-			}
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e) {}
-		
-	}// end "runCircle" method
-	
-	/**
-	 * SUPPORT METHOD - updates the coordinates field to the new square when the knight moves.
-	 * @param numMove - the option label we used
-	 */
-	private static void updateCoordinates(int numMove) {
-		
-		if (numMove == 0) {
-			coordinates[0] -= 2;
-			coordinates[1] += 1;
-		}
-		else if (numMove == 1) {
-			coordinates[0] -= 1;
-			coordinates[1] += 2;
-		}
-		else if (numMove == 2) {
-			coordinates[0] += 1;
-			coordinates[1] += 2;
-		}
-		else if (numMove == 3) {
-			coordinates[0] += 2;
-			coordinates[1] += 1;
-		}
-		else if (numMove == 4) {
-			coordinates[0] += 2;
-			coordinates[1] -= 1;
-		}
-		else if (numMove == 5) {
-			coordinates[0] += 1;
-			coordinates[1] -= 2;
-		}
-		else if (numMove == 6) {
-			coordinates[0] -= 1;
-			coordinates[1] -= 2;
-		}
-		else if (numMove == 7) {
-			coordinates[0] -= 2;
-			coordinates[1] -= 1;
-		}
-		
-	}// end "updateCoordinates" support method
+		return new BoardSquare();//Needed to add this line to prevent compile-time error, should never run.
+	}// end "selectMove" support method
 	
 }// end class

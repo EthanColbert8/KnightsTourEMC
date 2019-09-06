@@ -70,7 +70,7 @@ public class TextWriter {
 
 	@Override
 	public String toString() {
-		return "TextWriter [records = " + records + "]";
+		return "TextWriter [records = " + records.toString() + "]";
 	}
 	
 }// end "TextWriter" class
