@@ -11,6 +11,7 @@ package edu.bellarmine.emc;
 
  class Board {
 	 
+	 /* This array represents the chessboard. */
 	 public final BoardSquare[][] boardArray = {
 			 
 			 {new BoardSquare('a', 8, 0), new BoardSquare('b', 8, 0), new BoardSquare('c', 8, 0), new BoardSquare('d', 8, 0), new BoardSquare('e', 8, 0), new BoardSquare('f', 8, 0), new BoardSquare('g', 8, 0), new BoardSquare('h', 8, 0)},

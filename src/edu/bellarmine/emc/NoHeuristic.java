@@ -14,10 +14,10 @@ import java.util.Random;
 public class NoHeuristic {
 	
 	private static Random random = new Random();
-	private static TextWriter writer = new TextWriter("NoHeuristicRecord.txt");
+	private static TextWriter writer = new TextWriter("NoHeuristicRecord.txt");//writes to the file
 	
-	private static Board board = new Board();
-	private static Knight knight = new Knight();
+	private static Board board = new Board();//represents the chessboard
+	private static Knight knight = new Knight();//represents the knight
 	
 	/**
 	 * Execution starts here.
@@ -25,10 +25,10 @@ public class NoHeuristic {
 	 */
 	public static void main(String[] args) {
 		
-		BoardSquare lastSquare, initialSquare;
-		BoardSquare[] candidates;
+		BoardSquare lastSquare, initialSquare;//they keep track of the square the knight starts on and the immediately previous one
+		BoardSquare[] candidates;//an array to store all the knight's current legal moves
 		
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 1; i <= 1000; i++) {
 			
 			for (BoardSquare[] a : board.boardArray) {
 				
@@ -42,8 +42,6 @@ public class NoHeuristic {
 			initialSquare = knight.getCurrentSquare();
 			initialSquare.setMoveNumber(64);
 			
-			//System.out.println(initialSquare.toString());//debugging purposes
-			
 			int currentMove = 1;
 			
 			boolean done = false;
@@ -52,28 +50,15 @@ public class NoHeuristic {
 				lastSquare = knight.getCurrentSquare();
 				candidates = selectMove();
 				
-				/* debugging purposes 
-				for (BoardSquare b : candidates) {
-					
-					try {
-					System.out.println("Candidate: " + b.toString());
-					}
-					catch(NullPointerException e) {
-						System.out.println("Candidate: null");
-					}
-					
-				}
-				/**/
-				
+				/* This loop moves the knight to a random square it can legally move to,
+				 * or leaves it alone if it has no more moves. */
 				for (int j = 0; j < candidates.length; j++) {
 					
 					try {
 						
 						if (candidates[j].getMoveNumber() == 0 || (candidates[j].getMoveNumber() == 64 && currentMove == 64)) {
-							
 							knight.move(candidates[j]);
 							j = candidates.length;
-							
 						}
 						
 					}
@@ -81,21 +66,18 @@ public class NoHeuristic {
 					
 				}
 				
+				/* This bit decides whether to attempt another move or stop. */
 				if (lastSquare.getRank() == knight.getCurrentSquare().getRank()) {
 					done = true;
 				}
 				else {
 					knight.getCurrentSquare().setMoveNumber(currentMove);
-					//System.out.println(knight.getCurrentSquare().toString());//debugging purposes
 					currentMove++;
 				}
 				
-				if (currentMove >= 65) {
-					done = true;
-				}
-				
-			}//
+			}
 			
+			/* This bit writes the results of the tour to the records. */
 			if (knight.getCurrentSquare().getMoveNumber() == 64) {
 				writer.writeRecord("[" + initialSquare.getFile() + initialSquare.getRank() + ", " + 64 + ", " + knight.getCurrentSquare().getFile() + knight.getCurrentSquare().getRank() + "]*");
 			}

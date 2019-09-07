@@ -11,10 +11,10 @@ package edu.bellarmine.emc;
 
 public class BoardSquare {
 	
-	private char file;
-	private short rank;
-	private int knightAccess;
-	private int moveNumber;
+	private char file;//the square's file - in the range 'a' through 'h'
+	private short rank;//the square's rank - in the range 1 through 8
+	private int knightAccess;//the accessibility of the square to the knight
+	private int moveNumber;//the move on which the knight landed on the square
 	
 	/**
 	 * Empty-argument constructor - sets the file to 'a', the rank to 1, and the knightAccess to 2.
@@ -45,13 +45,16 @@ public class BoardSquare {
 	
 	/**
 	 * Decreases the knightAccess by 1 if it is at least 1 - leaves it at alone otherwise
+	 * @return whether we successfully decreased the knightAccess
 	 */
-	public void moveKnightTo() {
+	public boolean moveKnightTo() {
 		
 		if (knightAccess >= 1) {
 			knightAccess -= 1;
+			return true;
 		}
 		
+		return false;
 	}// end "moveKnightTo" method
 	
 	/**
@@ -76,6 +79,7 @@ public class BoardSquare {
 	}
 
 	/**
+	 * Bounds check - file passed has to be in the range 'a' through 'h'
 	 * @param f - the file to set
 	 */
 	public void setFile(char f) {
@@ -96,6 +100,7 @@ public class BoardSquare {
 	}
 
 	/**
+	 * Bounds check - rank passed has to be in the range 1 through 8
 	 * @param r - the rank to set
 	 */
 	public void setRank(short r) {
@@ -123,7 +128,7 @@ public class BoardSquare {
 	}
 	
 	/**
-	 * @return the current values of file, rank, and knightAccess
+	 * @return the current values of file, rank, knightAccess, and moveNumber
 	 */
 	@Override
 	public String toString() {

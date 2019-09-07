@@ -15,8 +15,8 @@ import java.io.IOException;
 
 public class TextWriter {
 	
-	private FileWriter writer;
-	private File records;
+	private FileWriter writer;//lets us write to the file
+	private File records;//a File object representing the file we're writing to
 	
 	/**
 	 * Empty-argument constructor.
