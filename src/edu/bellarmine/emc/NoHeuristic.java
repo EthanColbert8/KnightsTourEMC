@@ -25,13 +25,24 @@ public class NoHeuristic {
 	 */
 	public static void main(String[] args) {
 		
-		BoardSquare candidate, lastSquare, initialSquare;
+		BoardSquare lastSquare, initialSquare;
+		BoardSquare[] candidates;
 		
 		for (int i = 1; i <= 10; i++) {
+			
+			for (BoardSquare[] a : board.boardArray) {
+				
+				for (BoardSquare b : a) {
+					b.setMoveNumber(0);
+				}
+				
+			}
 			
 			knight.setCurrentSquare(board.boardArray[random.nextInt(8)][random.nextInt(8)]);
 			initialSquare = knight.getCurrentSquare();
 			initialSquare.setMoveNumber(64);
+			
+			//System.out.println(initialSquare.toString());//debugging purposes
 			
 			int currentMove = 1;
 			
@@ -39,34 +50,43 @@ public class NoHeuristic {
 			while (!(done)) {
 				
 				lastSquare = knight.getCurrentSquare();
+				candidates = selectMove();
 				
-				int count = 0;
-				boolean moved = false;
-				do {
+				/* debugging purposes 
+				for (BoardSquare b : candidates) {
 					
-					candidate = selectMove();
+					try {
+					System.out.println("Candidate: " + b.toString());
+					}
+					catch(NullPointerException e) {
+						System.out.println("Candidate: null");
+					}
 					
-					if (candidate.getMoveNumber() == 0 || candidate.getMoveNumber() == 64) {
+				}
+				/**/
+				
+				for (int j = 0; j < candidates.length; j++) {
+					
+					try {
 						
-						if (currentMove == 64 || candidate.getMoveNumber() == 0) {
-							knight.move(candidate);
-							moved = true;
+						if (candidates[j].getMoveNumber() == 0 || (candidates[j].getMoveNumber() == 64 && currentMove == 64)) {
+							
+							knight.move(candidates[j]);
+							j = candidates.length;
+							
 						}
 						
 					}
+					catch(NullPointerException e) {}
 					
-					count++;
-					if (count >= 10000) {
-						moved = true;
-					}
-					
-				} while (!(moved));
+				}
 				
 				if (lastSquare.getRank() == knight.getCurrentSquare().getRank()) {
 					done = true;
 				}
 				else {
 					knight.getCurrentSquare().setMoveNumber(currentMove);
+					//System.out.println(knight.getCurrentSquare().toString());//debugging purposes
 					currentMove++;
 				}
 				
@@ -88,57 +108,76 @@ public class NoHeuristic {
 	}// end main
 	
 	/**
-	 * SUPPORT METHOD - randomly selects a legal move for the knight.
-	 * @return a randomly selected square the knight can legally move to.
+	 * SUPPORT METHOD - returns an array of all the knight's legal moves in a random order.
+	 * @return an array of all the knight's legal moves in a random order
 	 */
-	private static BoardSquare selectMove() {
+	private static BoardSquare[] selectMove() {
 		
 		int[] currentCoordinates = {(8 - knight.getCurrentSquare().getRank()), (knight.getCurrentSquare().getFile() - 97)};
-		int[] newCoordinates = new int[2];
+		//stores the array indices of the knight's current square.
 		
-		boolean legal = false;
-		do {
-			
-			boolean xSelected = false;
-			do {
-				newCoordinates[0] = currentCoordinates[0] + (random.nextInt(5) - 2);
-				
-				if (newCoordinates[0] != currentCoordinates[0]) {
-					xSelected = true;}
-				
-			} while (!(xSelected));
-			
-			boolean posOrNeg = random.nextBoolean();
-			if (Math.abs(newCoordinates[0] - currentCoordinates[0]) == 1) {
-				
-				if (posOrNeg) {
-					newCoordinates[1] = currentCoordinates[1] + 2;
-				}
-				else {
-					newCoordinates[1] = currentCoordinates[1] - 2;
-				}
-				
-			}
-			else {
-				
-				if (posOrNeg) {
-					newCoordinates[1] = currentCoordinates[1] + 1;
-				}
-				else {
-					newCoordinates[1] = currentCoordinates[1] - 1;
-				}
-				
-			}
-			
-			try {
-				return board.boardArray[newCoordinates[0]][newCoordinates[1]];
-				//legal = true;
-			}
-			catch(ArrayIndexOutOfBoundsException e) {}
-			
-		} while (!(legal));
+		BoardSquare[] moves = new BoardSquare[8];
 		
-		return new BoardSquare();//Needed to add this line to prevent compile-time error, should never run.
+		/* These blocks fill the array with all the squares the knight can legally move to,
+		 * leaving the array slots set to null if the possibilities are outside the chessboard. */
+		try {
+			moves[0] = board.boardArray[currentCoordinates[0] - 2][currentCoordinates[1] + 1];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		try {
+			moves[1] = board.boardArray[currentCoordinates[0] - 1][currentCoordinates[1] + 2];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		try {
+			moves[2] = board.boardArray[currentCoordinates[0] + 1][currentCoordinates[1] + 2];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		try {
+			moves[3] = board.boardArray[currentCoordinates[0] + 2][currentCoordinates[1] + 1];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		try {
+			moves[4] = board.boardArray[currentCoordinates[0] + 2][currentCoordinates[1] - 1];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		try {
+			moves[5] = board.boardArray[currentCoordinates[0] + 1][currentCoordinates[1] - 2];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		try {
+			moves[6] = board.boardArray[currentCoordinates[0] - 1][currentCoordinates[1] - 2];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		try {
+			moves[7] = board.boardArray[currentCoordinates[0] - 2][currentCoordinates[1] - 1];
+		}
+		catch(ArrayIndexOutOfBoundsException e) {}
+		
+		shuffleArray(moves);
+		
+		return moves;
 	}// end "selectMove" support method
+	
+	/**
+	 * SUPPORT METHOD - shuffles an array of BoardSquare objects.
+	 * @param array - the array to be shuffled
+	 */
+	private static void shuffleArray(BoardSquare[] array) {
+		
+		BoardSquare temporarySquare;
+		int rand;
+		
+		for (int i = 0; i < array.length; i++) {
+			
+			rand = random.nextInt(array.length);
+			
+			//Switches the square at index i with that at index rand.
+			temporarySquare = array[i];
+			array[i] = array[rand];
+			array[rand] = temporarySquare;
+			
+		}
+		
+	}// end "shuffleArray" support method
 	
 }// end class

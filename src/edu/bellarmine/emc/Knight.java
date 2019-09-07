@@ -66,6 +66,7 @@ public class Knight {
 		
 	}// end "canMoveTo" method
 	
+	
 	/**
 	 * @return the currentSquare
 	 */
