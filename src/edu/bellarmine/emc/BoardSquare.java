@@ -47,7 +47,7 @@ public class BoardSquare {
 	 * Decreases the knightAccess by 1 if it is at least 1 - leaves it at alone otherwise
 	 * @return whether we successfully decreased the knightAccess
 	 */
-	public boolean moveKnightTo() {
+	public boolean movedAround() {
 		
 		if (knightAccess >= 1) {
 			knightAccess -= 1;

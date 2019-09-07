@@ -27,9 +27,11 @@ public class NoHeuristic {
 		
 		BoardSquare lastSquare, initialSquare;//they keep track of the square the knight starts on and the immediately previous one
 		BoardSquare[] candidates;//an array to store all the knight's current legal moves
+		int currentMove;//how many moves the knight's taken up to the current point in the tour
 		
 		for (int i = 1; i <= 1000; i++) {
 			
+			/* Resets the moveNumber of all the board's squares to 0 */
 			for (BoardSquare[] a : board.boardArray) {
 				
 				for (BoardSquare b : a) {
@@ -40,9 +42,9 @@ public class NoHeuristic {
 			
 			knight.setCurrentSquare(board.boardArray[random.nextInt(8)][random.nextInt(8)]);
 			initialSquare = knight.getCurrentSquare();
-			initialSquare.setMoveNumber(64);
+			initialSquare.setMoveNumber(64);//this lets us make sure we don't jump back to the starting square before finishing the tour
 			
-			int currentMove = 1;
+			currentMove = 1;
 			
 			boolean done = false;
 			while (!(done)) {
