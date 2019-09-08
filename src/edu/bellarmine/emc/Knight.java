@@ -50,7 +50,7 @@ public class Knight {
 	}// end "move" method
 	
 	/**
-	 * This method checks to see whether a specified square can be legally moved to by the knight.
+	 * SUPPORT METHOD - checks to see whether a specified square can be legally moved to by the knight
 	 * @param candidate - the square we want to move the knight to.
 	 * @return whether "candidate" is a legal move for the knight.
 	 */
@@ -64,7 +64,7 @@ public class Knight {
 		
 		return false;
 		
-	}// end "canMoveTo" method
+	}// end "canMoveTo" support method
 	
 	
 	/**

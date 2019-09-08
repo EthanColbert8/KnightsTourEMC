@@ -168,7 +168,7 @@ public class Heuristic {
 				array[i] = array[i + 1];
 				array[i + 1] = temporarySquare;
 				
-				i = 0;
+				i = -1;
 			}
 			
 		}
@@ -192,7 +192,7 @@ public class Heuristic {
 		
 		BoardSquare[] newArray = new BoardSquare[toTrim.length - countNulls];
 		
-		count = 0;
+		count = 0;//keeps track of where we are in the toTrim array
 		for (int i = 0; i < newArray.length; i++) {
 			
 			boolean found = false;
